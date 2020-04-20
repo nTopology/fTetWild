@@ -33,7 +33,7 @@ void floatTetWild::bfs_orient(const Eigen::Matrix<int, Eigen::Dynamic, 3> &F, Ei
         FF = F;
 
     // loop over patches
-#pragma omp parallel for
+//#pragma omp parallel for --> possibly causes output to not be reproducible; turn off for now
     for (int c = 0; c < num_cc; c++) {
         std::queue<int> Q;
         // find first member of patch c
