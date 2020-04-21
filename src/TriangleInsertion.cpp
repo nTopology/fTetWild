@@ -140,8 +140,7 @@ void floatTetWild::sort_input_faces(const std::vector<Vector3> &input_vertices, 
     if (mesh.params.not_sort_input)
         return;
 
-    // causes output to not be reproducibile. turn off for now
-    //std::shuffle(sorted_f_ids.begin(), sorted_f_ids.end(), std::mt19937(0));
+    std::shuffle(sorted_f_ids.begin(), sorted_f_ids.end(), std::mt19937(0));
 
 //    std::sort(sorted_f_ids.begin(), sorted_f_ids.end(), [&weights](int a, int b) {
 //        return weights[a] < weights[b];

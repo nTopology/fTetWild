@@ -132,10 +132,10 @@ target_link_libraries(${PROJECT_NAME}
 		json
 		#${MPFR_LIBRARIES}
 )
-#if(FLOAT_TETWILD_ENABLE_TBB)
-#	target_link_libraries(${PROJECT_NAME} PUBLIC tbb::tbb)
-#	target_compile_definitions(${PROJECT_NAME} PUBLIC FLOAT_TETWILD_USE_TBB)
-#endif()
+if(FLOAT_TETWILD_ENABLE_TBB)
+	target_link_libraries(${PROJECT_NAME} PUBLIC tbb::tbb)
+	target_compile_definitions(${PROJECT_NAME} PUBLIC FLOAT_TETWILD_USE_TBB)
+endif()
 
 ################################################################################
 # FloatTetwild binary
