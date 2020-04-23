@@ -39,7 +39,7 @@
 int run_ftetwild(GEO::Mesh& mesh, int& numVertices, int& numTets)
 {
     // reset random number generator
-    srand(1);
+    //srand(1);
 
     numTets     = 0;
     numVertices = 0;
@@ -95,8 +95,14 @@ TEST_CASE("Tetrahedralize mesh with ftetwild", "[ftetwild]")
     std::vector<int>                   input_tags;
     GEO::Mesh                          mesh, mesh1, mesh2;
 
+    //floatTetWild::MeshIO::load_mesh(
+    //    "..\\..\\..\\tests\\obj\\bunny.obj", input_vertices, input_faces, mesh, input_tags);
     floatTetWild::MeshIO::load_mesh(
-      "..\\..\\..\\tests\\obj\\bunny.obj", input_vertices, input_faces, mesh, input_tags);
+        "..\\..\\..\\tests\\obj\\cylinder.obj", input_vertices, input_faces, mesh, input_tags);
+    //floatTetWild::MeshIO::load_mesh(
+    //    "..\\..\\..\\tests\\obj\\box.stl", input_vertices, input_faces, mesh, input_tags);
+    //floatTetWild::MeshIO::load_mesh(
+    //    "..\\..\\..\\tests\\obj\\cylinder.stl", input_vertices, input_faces, mesh, input_tags);
 
     SECTION("Reproducibility")
     {
