@@ -35,7 +35,7 @@ int tetrahedralization(GEO::Mesh&       sf_mesh,
         GEO::mesh_repair(
           sf_mesh, GEO::MeshRepairMode(GEO::MESH_REPAIR_TRIANGULATE | GEO::MESH_REPAIR_QUIET));
     }
-    //GEO::mesh_reorder(sf_mesh, GEO::MESH_ORDER_MORTON);
+    GEO::mesh_reorder(sf_mesh, GEO::MESH_ORDER_MORTON);
 
     std::vector<Vector3>  input_vertices(sf_mesh.vertices.nb());
     std::vector<Vector3i> input_faces(sf_mesh.facets.nb());

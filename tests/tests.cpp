@@ -36,8 +36,11 @@
 
 // using namespace floattetwild;
 
-int run_ftetwild(GEO::Mesh& mesh, int& numVertices, int& numTets)
+int run_ftetwild(const GEO::Mesh& mesh, int& numVertices, int& numTets)
 {
+    GEO::Mesh local_mesh;
+    local_mesh.copy(mesh);
+
     // reset random number generator
     //srand(1);
 
@@ -68,7 +71,7 @@ int run_ftetwild(GEO::Mesh& mesh, int& numVertices, int& numTets)
     try {
         Eigen::MatrixXd VO;
         Eigen::MatrixXi TO;
-        floatTetWild::tetrahedralization(mesh, params, VO, TO);
+        floatTetWild::tetrahedralization(local_mesh, params, VO, TO);
         numTets     = TO.rows();
         numVertices = VO.rows();
     }
@@ -90,22 +93,103 @@ TEST_CASE("Tetrahedralize mesh with ftetwild", "[ftetwild]")
 {
     GEO::initialize();
 
-    std::vector<floatTetWild::Vector3> input_vertices;
-    std::vector<Eigen::Vector3i>       input_faces;
-    std::vector<int>                   input_tags;
-    GEO::Mesh                          mesh, mesh1, mesh2;
-
-    //floatTetWild::MeshIO::load_mesh(
-    //    "..\\..\\..\\tests\\obj\\bunny.obj", input_vertices, input_faces, mesh, input_tags);
-    floatTetWild::MeshIO::load_mesh(
-        "..\\..\\..\\tests\\obj\\cylinder.obj", input_vertices, input_faces, mesh, input_tags);
-    //floatTetWild::MeshIO::load_mesh(
-    //    "..\\..\\..\\tests\\obj\\box.stl", input_vertices, input_faces, mesh, input_tags);
-    //floatTetWild::MeshIO::load_mesh(
-    //    "..\\..\\..\\tests\\obj\\cylinder.stl", input_vertices, input_faces, mesh, input_tags);
-
-    SECTION("Reproducibility")
+    SECTION("Reproducibility 1")
     {
+        std::vector<floatTetWild::Vector3> input_vertices;
+        std::vector<Eigen::Vector3i>       input_faces;
+        std::vector<int>                   input_tags;
+        GEO::Mesh                          mesh;
+
+        floatTetWild::MeshIO::load_mesh(
+            "..\\..\\..\\tests\\obj\\bunny.obj", input_vertices, input_faces, mesh, input_tags);
+
+        int  numV = -1, numT = -1;
+        auto ret = run_ftetwild(mesh, numV, numT);
+        REQUIRE(ret == 0);
+
+        int  numV1, numT1;
+        auto ret1 = run_ftetwild(mesh, numV1, numT1);
+        REQUIRE(ret1 == 0);
+
+        int  numV2, numT2;
+        auto ret2 = run_ftetwild(mesh, numV2, numT2);
+        REQUIRE(ret2 == 0);
+
+        REQUIRE(numV1 == numV);
+        REQUIRE(numT1 == numT);
+        REQUIRE(numV2 == numV);
+        REQUIRE(numT2 == numT);
+
+    }
+
+    SECTION("Reproducibility 2")
+    {
+        std::vector<floatTetWild::Vector3> input_vertices;
+        std::vector<Eigen::Vector3i>       input_faces;
+        std::vector<int>                   input_tags;
+        GEO::Mesh                          mesh;
+
+        floatTetWild::MeshIO::load_mesh(
+            "..\\..\\..\\tests\\obj\\cylinder.obj", input_vertices, input_faces, mesh, input_tags);
+
+        int  numV = -1, numT = -1;
+        auto ret = run_ftetwild(mesh, numV, numT);
+        REQUIRE(ret == 0);
+
+        int  numV1, numT1;
+        auto ret1 = run_ftetwild(mesh, numV1, numT1);
+        REQUIRE(ret1 == 0);
+
+        int  numV2, numT2;
+        auto ret2 = run_ftetwild(mesh, numV2, numT2);
+        REQUIRE(ret2 == 0);
+
+        REQUIRE(numV1 == numV);
+        REQUIRE(numT1 == numT);
+        REQUIRE(numV2 == numV);
+        REQUIRE(numT2 == numT);
+
+    }
+
+    SECTION("Reproducibility 3")
+    {
+        std::vector<floatTetWild::Vector3> input_vertices;
+        std::vector<Eigen::Vector3i>       input_faces;
+        std::vector<int>                   input_tags;
+        GEO::Mesh                          mesh;
+
+        floatTetWild::MeshIO::load_mesh(
+            "..\\..\\..\\tests\\obj\\box.stl", input_vertices, input_faces, mesh, input_tags);
+
+        int  numV = -1, numT = -1;
+        auto ret = run_ftetwild(mesh, numV, numT);
+        REQUIRE(ret == 0);
+
+        int  numV1, numT1;
+        auto ret1 = run_ftetwild(mesh, numV1, numT1);
+        REQUIRE(ret1 == 0);
+
+        int  numV2, numT2;
+        auto ret2 = run_ftetwild(mesh, numV2, numT2);
+        REQUIRE(ret2 == 0);
+
+        REQUIRE(numV1 == numV);
+        REQUIRE(numT1 == numT);
+        REQUIRE(numV2 == numV);
+        REQUIRE(numT2 == numT);
+
+    }
+
+    SECTION("Reproducibility 4")
+    {
+        std::vector<floatTetWild::Vector3> input_vertices;
+        std::vector<Eigen::Vector3i>       input_faces;
+        std::vector<int>                   input_tags;
+        GEO::Mesh                          mesh;
+
+        floatTetWild::MeshIO::load_mesh(
+            "..\\..\\..\\tests\\obj\\cylinder.stl", input_vertices, input_faces, mesh, input_tags);
+
         int  numV = -1, numT = -1;
         auto ret = run_ftetwild(mesh, numV, numT);
         REQUIRE(ret == 0);
