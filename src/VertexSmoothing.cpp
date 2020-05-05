@@ -143,12 +143,17 @@ void floatTetWild::vertex_smoothing(Mesh& mesh, const AABBWrapper& tree){
     for(const auto &s : concurrent_sets){
         tbb::parallel_for( size_t(0), size_t(s.size()), [&]( size_t i ){
         // for(int i = 0; i < s.size(); ++i)
+            if (mesh.params.user_callback) { mesh.params.user_callback(Step::Optimize, -0.50); }
+
             smooth_one(s[i]);
         });
     }
 
-    for (size_t v_id : serial_set)
+    for (size_t v_id : serial_set) {
+        if (mesh.params.user_callback) { mesh.params.user_callback(Step::Optimize, -0.50); }
+
         smooth_one(v_id);
+    }
 #else
     for (size_t v_id = 0; v_id < tet_vertices.size(); v_id++)
         smooth_one(v_id);

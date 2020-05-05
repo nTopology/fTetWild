@@ -299,6 +299,8 @@ void floatTetWild::insert_triangles_aux(const std::vector<Vector3> &input_vertic
 
     //////
     for (int i = 0; i < sorted_f_ids.size(); i++) {
+        if (mesh.params.user_callback) { mesh.params.user_callback(Step::Cut, -0.50); }
+
         //fortest
         if (!is_again && i > 0 && i % 1000 == 0) {
             logger().debug("inserting f{}... {} failed", i, cnt_fail);

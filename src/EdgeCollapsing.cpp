@@ -63,6 +63,8 @@ void edge_collapsing_aux(Mesh& mesh, const AABBWrapper& tree, std::vector<std::a
         suc_counter = 0;
         suc_counter_env = 0;
         while (!ec_queue.empty()) {
+            if (mesh.params.user_callback) { mesh.params.user_callback(Step::Optimize, -0.50); }
+
             std::array<int, 2> v_ids = ec_queue.top().v_ids;
             Scalar old_weight = ec_queue.top().weight;
             ec_queue.pop();
