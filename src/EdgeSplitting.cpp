@@ -65,6 +65,8 @@ void floatTetWild::edge_splitting(Mesh& mesh, const AABBWrapper& tree) {
     std::vector<bool> is_splittable(mesh.tets.size(), true);
     bool is_repush = true;
     while (!es_queue.empty()) {
+        if (mesh.params.user_callback) { mesh.params.user_callback(Step::Optimize, -0.50); }
+
         std::array<int, 2> v_ids = es_queue.top().v_ids;
         es_queue.pop();
 

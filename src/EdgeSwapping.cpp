@@ -50,6 +50,8 @@ void floatTetWild::edge_swapping(Mesh& mesh) {
     edges.clear();
 
     while (!es_queue.empty()) {
+        if (mesh.params.user_callback) { mesh.params.user_callback(Step::Optimize, -0.50); }
+
         std::array<int, 2> v_ids = es_queue.top().v_ids;
         es_queue.pop();
 

@@ -342,6 +342,8 @@ void floatTetWild::operation(const std::vector<Vector3> &input_vertices, const s
     }
 
     for (int i = 0; i < ops[3]; i++) {
+        if (mesh.params.user_callback) { mesh.params.user_callback(Step::Optimize, -0.50); }
+
         igl_timer.start();
         vertex_smoothing(mesh, tree);
         time = igl_timer.getElapsedTime();
@@ -356,6 +358,8 @@ void floatTetWild::operation(const std::vector<Vector3> &input_vertices, const s
         pausee();
 
         for (int i = 0; i < ops[4]; i++) {
+            if (mesh.params.user_callback) { mesh.params.user_callback(Step::Optimize, -0.50); }
+
 //            //reset boundary points
 //            for (auto &v: mesh.tet_vertices) {
 //                if (v.is_removed)
@@ -1479,6 +1483,8 @@ void floatTetWild::untangle(Mesh &mesh) {
 
     int cnt = 0;
     for (int t_id = 0; t_id < tets.size(); t_id++) {
+        if (mesh.params.user_callback) { mesh.params.user_callback(Step::Optimize, -0.50); }
+
         auto &t = tets[t_id];
         if (t.is_removed)
             continue;
