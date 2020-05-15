@@ -9,7 +9,13 @@
 #ifndef TRIWILD_RATIONAL_H
 #define TRIWILD_RATIONAL_H
 
+#ifdef FLOAT_TETWILD_IN_NTOP
+//#include <CGAL/CORE/Gmp.h>
+#include <gmp_.h>
+#else
 #include <gmp.h>
+#endif
+
 #include <iostream>
 
 namespace triwild {

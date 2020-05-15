@@ -53,7 +53,6 @@ endif()
 option(FLOAT_TETWILD_ENABLE_TBB         "Enable TBB"                    ON)
 option(FLOAT_TETWILD_USE_FLOAT          "Use floats instead of double"  OFF)
 option(FLOAT_TETWILD_WITH_SANITIZERS    "Use sanitizers"                OFF)
-option(FLOAT_TETWILD_IN_NTOP		    "Using nTop Platform customizations" ON)
 
 # Sanitizer options
 option(SANITIZE_ADDRESS   "Sanitize Address"       OFF)
@@ -119,32 +118,17 @@ endif()
 # Required libraries
 ################################################################################
 
-if(FLOAT_TETWILD_IN_NTOP)
-	target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_IN_NTOP)
-endif()
-
 if(FLOAT_TETWILD_USE_FLOAT)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_USE_FLOAT)
-endif()
-
-ntop_import(gmp windingnumber)
-
-# On Windows, gmp and mpfr don't compile easily, so dlls provided by CGAL are
-# used. therefore we have to include the directory with gmp.h provided by CGAL.
-if(WIN32)
-    target_include_directories(${PROJECT_NAME} PUBLIC "${TURBO_CMAKE_DIR}/../external/cgal/winderp")
-else()
-    target_include_directories(${PROJECT_NAME} PUBLIC "${TURBO_CMAKE_DIR}/../external/cgal/unix")
 endif()
 
 target_link_libraries(${PROJECT_NAME}
 	PUBLIC
 		igl::core
-		gmp::gmp
 		geogram::geogram
 		spdlog::spdlog
 		Threads::Threads
-	    windingnumber::windingnumber
+		fast_winding_number
 		json
 		#${MPFR_LIBRARIES}
 )
