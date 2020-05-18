@@ -89,3 +89,30 @@ if(NOT TARGET json)
 	add_library(json INTERFACE)
 	target_include_directories(json SYSTEM INTERFACE ${FLOAT_TETWILD_EXTERNAL}/json/include)
 endif()
+
+
+if(NOT FLOAT_TETWILD_IN_NTOP)
+# winding number
+float_tetwild_download_windingnumber()
+set(windingnumber_SOURCES
+	${FLOAT_TETWILD_EXTERNAL}/windingnumber/SYS_Math.h
+	${FLOAT_TETWILD_EXTERNAL}/windingnumber/SYS_Types.h
+	${FLOAT_TETWILD_EXTERNAL}/windingnumber/UT_Array.cpp
+	${FLOAT_TETWILD_EXTERNAL}/windingnumber/UT_Array.h
+	${FLOAT_TETWILD_EXTERNAL}/windingnumber/UT_ArrayImpl.h
+	${FLOAT_TETWILD_EXTERNAL}/windingnumber/UT_BVH.h
+	${FLOAT_TETWILD_EXTERNAL}/windingnumber/UT_BVHImpl.h
+	${FLOAT_TETWILD_EXTERNAL}/windingnumber/UT_FixedVector.h
+	${FLOAT_TETWILD_EXTERNAL}/windingnumber/UT_ParallelUtil.h
+	${FLOAT_TETWILD_EXTERNAL}/windingnumber/UT_SmallArray.h
+	${FLOAT_TETWILD_EXTERNAL}/windingnumber/UT_SolidAngle.cpp
+	${FLOAT_TETWILD_EXTERNAL}/windingnumber/UT_SolidAngle.h
+	${FLOAT_TETWILD_EXTERNAL}/windingnumber/VM_SIMD.h
+	${FLOAT_TETWILD_EXTERNAL}/windingnumber/VM_SSEFunc.h
+)
+
+add_library(fast_winding_number ${windingnumber_SOURCES})
+target_link_libraries(fast_winding_number PRIVATE tbb::tbb)
+target_compile_features(fast_winding_number PRIVATE ${CXX17_FEATURES})
+target_include_directories(fast_winding_number PUBLIC "${FLOAT_TETWILD_EXTERNAL}/")
+endif()

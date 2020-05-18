@@ -7,8 +7,10 @@ project(FloatTetwild)
 get_directory_property(HAS_PARENT PARENT_DIRECTORY)
 if(HAS_PARENT)
 	set(FLOAT_TETWILD_TOPLEVEL_PROJECT OFF)
+	set(FLOAT_TETWILD_IN_NTOP ON)
 else()
 	set(FLOAT_TETWILD_TOPLEVEL_PROJECT ON)
+	set(FLOAT_TETWILD_IN_NTOP OFF)
 endif()
 
 if(INPUT_THIRD_PARTY_DIR)
@@ -53,7 +55,6 @@ endif()
 option(FLOAT_TETWILD_ENABLE_TBB         "Enable TBB"                    ON)
 option(FLOAT_TETWILD_USE_FLOAT          "Use floats instead of double"  OFF)
 option(FLOAT_TETWILD_WITH_SANITIZERS    "Use sanitizers"                OFF)
-option(FLOAT_TETWILD_IN_NTOP		    "Using nTop Platform customizations" ON)
 
 # Sanitizer options
 option(SANITIZE_ADDRESS   "Sanitize Address"       OFF)
@@ -119,35 +120,47 @@ endif()
 # Required libraries
 ################################################################################
 
-if(FLOAT_TETWILD_IN_NTOP)
-	target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_IN_NTOP)
-endif()
-
 if(FLOAT_TETWILD_USE_FLOAT)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_USE_FLOAT)
 endif()
 
-ntop_import(gmp windingnumber)
 
-# On Windows, gmp and mpfr don't compile easily, so dlls provided by CGAL are
-# used. therefore we have to include the directory with gmp.h provided by CGAL.
-if(WIN32)
-    target_include_directories(${PROJECT_NAME} PUBLIC "${TURBO_CMAKE_DIR}/../external/cgal/winderp")
+if(FLOAT_TETWILD_IN_NTOP)
+	target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_IN_NTOP)
+	ntop_import(gmp windingnumber)
+
+
+	# On Windows, gmp and mpfr don't compile easily, so dlls provided by CGAL are
+	# used. therefore we have to include the directory with gmp.h provided by CGAL.
+	if(WIN32)
+		target_include_directories(${PROJECT_NAME} PUBLIC "${TURBO_CMAKE_DIR}/../external/cgal/winderp")
+	else()
+		target_include_directories(${PROJECT_NAME} PUBLIC "${TURBO_CMAKE_DIR}/../external/cgal/unix")
+	endif()
+
+	target_link_libraries(${PROJECT_NAME}
+		PUBLIC
+			igl::core
+			gmp::gmp
+			geogram::geogram
+			spdlog::spdlog
+			Threads::Threads
+			windingnumber::windingnumber
+			json
+	)
 else()
-    target_include_directories(${PROJECT_NAME} PUBLIC "${TURBO_CMAKE_DIR}/../external/cgal/unix")
+	target_link_libraries(${PROJECT_NAME}
+		PUBLIC
+			igl::core
+			geogram::geogram
+			spdlog::spdlog
+			Threads::Threads
+			fast_winding_number
+			json
+			#${MPFR_LIBRARIES}
+	)
 endif()
 
-target_link_libraries(${PROJECT_NAME}
-	PUBLIC
-		igl::core
-		gmp::gmp
-		geogram::geogram
-		spdlog::spdlog
-		Threads::Threads
-	    windingnumber::windingnumber
-		json
-		#${MPFR_LIBRARIES}
-)
 if(FLOAT_TETWILD_ENABLE_TBB)
 	target_link_libraries(${PROJECT_NAME} PUBLIC tbb::tbb)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC FLOAT_TETWILD_USE_TBB)
