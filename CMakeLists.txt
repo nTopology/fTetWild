@@ -126,6 +126,8 @@ endif()
 
 
 if(FLOAT_TETWILD_IN_NTOP)
+	target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_RATIONAL_ON)
+
 	target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_IN_NTOP)
 	ntop_import(gmp windingnumber)
 
