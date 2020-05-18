@@ -149,6 +149,8 @@ if(FLOAT_TETWILD_IN_NTOP)
 			json
 	)
 else()
+	#target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_RATIONAL_ON)
+
 	target_link_libraries(${PROJECT_NAME}
 		PUBLIC
 			igl::core
