@@ -129,16 +129,8 @@ if(FLOAT_TETWILD_IN_NTOP)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_RATIONAL_ON)
 
 	target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_IN_NTOP)
+
 	ntop_import(gmp windingnumber)
-
-
-	# On Windows, gmp and mpfr don't compile easily, so dlls provided by CGAL are
-	# used. therefore we have to include the directory with gmp.h provided by CGAL.
-	if(WIN32)
-		target_include_directories(${PROJECT_NAME} PUBLIC "${TURBO_CMAKE_DIR}/../external/cgal/winderp")
-	else()
-		target_include_directories(${PROJECT_NAME} PUBLIC "${TURBO_CMAKE_DIR}/../external/cgal/unix")
-	endif()
 
 	target_link_libraries(${PROJECT_NAME}
 		PUBLIC
