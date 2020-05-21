@@ -7,8 +7,10 @@ project(FloatTetwild)
 get_directory_property(HAS_PARENT PARENT_DIRECTORY)
 if(HAS_PARENT)
 	set(FLOAT_TETWILD_TOPLEVEL_PROJECT OFF)
+	set(FLOAT_TETWILD_IN_NTOP ON)
 else()
 	set(FLOAT_TETWILD_TOPLEVEL_PROJECT ON)
+	set(FLOAT_TETWILD_IN_NTOP OFF)
 endif()
 
 if(INPUT_THIRD_PARTY_DIR)
@@ -122,16 +124,39 @@ if(FLOAT_TETWILD_USE_FLOAT)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_USE_FLOAT)
 endif()
 
-target_link_libraries(${PROJECT_NAME}
-	PUBLIC
-		igl::core
-		geogram::geogram
-		spdlog::spdlog
-		Threads::Threads
-		fast_winding_number
-		json
-		#${MPFR_LIBRARIES}
-)
+
+if(FLOAT_TETWILD_IN_NTOP)
+	target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_RATIONAL_ON)
+
+	target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_IN_NTOP)
+
+	ntop_import(gmp windingnumber)
+
+	target_link_libraries(${PROJECT_NAME}
+		PUBLIC
+			igl::core
+			gmp::gmp
+			geogram::geogram
+			spdlog::spdlog
+			Threads::Threads
+			windingnumber::windingnumber
+			json
+	)
+else()
+	#target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_RATIONAL_ON)
+
+	target_link_libraries(${PROJECT_NAME}
+		PUBLIC
+			igl::core
+			geogram::geogram
+			spdlog::spdlog
+			Threads::Threads
+			fast_winding_number
+			json
+			#${MPFR_LIBRARIES}
+	)
+endif()
+
 if(FLOAT_TETWILD_ENABLE_TBB)
 	target_link_libraries(${PROJECT_NAME} PUBLIC tbb::tbb)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC FLOAT_TETWILD_USE_TBB)

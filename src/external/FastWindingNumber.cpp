@@ -2,7 +2,11 @@
 
 #include <igl/parallel_for.h>
 
+#ifdef FLOAT_TETWILD_IN_NTOP
+#include <UT_SolidAngle.h>
+#else
 #include <windingnumber/UT_SolidAngle.h>
+#endif 
 
 #include <cstdlib>
 
