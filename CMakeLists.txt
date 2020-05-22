@@ -171,7 +171,7 @@ else()
 	)
 endif()
 
-if(FLOAT_TETWILD_ENABLE_TBB)
+if(FLOAT_TETWILD_ENABLE_TBB AND NOT FLOAT_TETWILD_IN_NTOP)
 	target_link_libraries(${PROJECT_NAME} PUBLIC tbb::tbb)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC FLOAT_TETWILD_USE_TBB)
 endif()
