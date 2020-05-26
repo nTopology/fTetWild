@@ -131,9 +131,9 @@ if(FLOAT_TETWILD_IN_NTOP)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_IN_NTOP)
 
 	ntop_import(gmp windingnumber)
-
-	target_link_libraries(${PROJECT_NAME}
-		PUBLIC
+	if(WIN32)
+		target_link_libraries(${PROJECT_NAME}
+			PUBLIC
 			igl::core
 			gmp::gmp
 			geogram::geogram
@@ -141,7 +141,21 @@ if(FLOAT_TETWILD_IN_NTOP)
 			Threads::Threads
 			windingnumber::windingnumber
 			json
-	)
+		)
+	else()
+	    target_include_directories(${PROJECT_NAME} PUBLIC "${TURBO_CMAKE_DIR}/../external/cgal/unix")
+    
+		target_link_libraries(${PROJECT_NAME}
+			PUBLIC
+			igl::core
+			gmp
+			geogram::geogram
+			spdlog::spdlog
+			Threads::Threads
+			windingnumber::windingnumber
+			json
+		)
+	endif()
 else()
 	#target_compile_definitions(${PROJECT_NAME} PUBLIC -DFLOAT_TETWILD_RATIONAL_ON)
 
@@ -157,7 +171,7 @@ else()
 	)
 endif()
 
-if(FLOAT_TETWILD_ENABLE_TBB)
+if(FLOAT_TETWILD_ENABLE_TBB AND NOT FLOAT_TETWILD_IN_NTOP)
 	target_link_libraries(${PROJECT_NAME} PUBLIC tbb::tbb)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC FLOAT_TETWILD_USE_TBB)
 endif()
