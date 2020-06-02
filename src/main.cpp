@@ -447,6 +447,7 @@ int main(int argc, char **argv) {
     logger().info("#v = {}", mesh.get_v_num());
     logger().info("#t = {}", mesh.get_t_num());
     logger().info("winding number {}s", timer.getElapsedTimeInSec());
+    logger().info("Final max energy {}", mesh.get_max_energy());
     logger().info("");
 
 

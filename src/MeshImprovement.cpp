@@ -137,7 +137,7 @@ void floatTetWild::optimization(const std::vector<Vector3> &input_vertices, cons
     cleanup_empty_slots(mesh);
     operation(input_vertices, input_faces, input_tags, is_face_inserted, mesh, tree, std::array<int, 5>({{0, 0, 0, 0, 1}}));
 
-    const int M = 5;
+    const int M = mesh.params.refinement_iters_after_insertion; // 5;
     const int N = 5;
 
     ////optimization
@@ -154,6 +154,8 @@ void floatTetWild::optimization(const std::vector<Vector3> &input_vertices, cons
 
         Scalar max_energy, avg_energy;
         get_max_avg_energy(mesh, max_energy, avg_energy);
+        if (mesh.params.is_mesh_repair_application && mesh.is_input_all_inserted && it_after_al_inserted > M)
+            break;
         if (max_energy <= mesh.params.stop_energy && mesh.is_input_all_inserted)
             break;
 
