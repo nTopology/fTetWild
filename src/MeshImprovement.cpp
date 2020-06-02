@@ -165,7 +165,7 @@ void floatTetWild::optimization(const std::vector<Vector3> &input_vertices, cons
                 first_iter_energy = max_energy;
             }
             else {
-                double progress = std::max(0.0, 1.0 - (log(max_energy) - log(mesh.params.stop_energy)) / (log(first_iter_energy) - log(mesh.params.stop_energy)));
+                double progress = std::min(0.99, std::max(0.01, 1.0 - (log(max_energy) - log(mesh.params.stop_energy)) / (log(first_iter_energy) - log(mesh.params.stop_energy))));
                 mesh.params.user_callback(Step::Optimize, progress);
             }
         }
