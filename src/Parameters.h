@@ -56,6 +56,8 @@ enum class Step;
 
     int    max_its     = 80;
     Scalar stop_energy = 10;
+    bool is_mesh_repair_application = false;
+    int refinement_iters_after_insertion = 5;
 
     int stage = 2;
 

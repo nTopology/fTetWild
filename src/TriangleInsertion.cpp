@@ -299,7 +299,14 @@ void floatTetWild::insert_triangles_aux(const std::vector<Vector3> &input_vertic
 
     //////
     for (int i = 0; i < sorted_f_ids.size(); i++) {
-        if (mesh.params.user_callback) { mesh.params.user_callback(Step::Cut, -0.50); }
+        if (mesh.params.user_callback) {
+            if (!is_again) {
+                mesh.params.user_callback(Step::Cut, (float)i / (float)sorted_f_ids.size());
+            }
+            else {
+                mesh.params.user_callback(Step::Optimize, -0.50);
+            }
+        }
 
         //fortest
         if (!is_again && i > 0 && i % 1000 == 0) {
