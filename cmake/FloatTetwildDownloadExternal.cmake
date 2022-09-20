@@ -24,13 +24,13 @@ endfunction()
 
 ################################################################################
 
-## libigl
-#function(float_tetwild_download_libigl)
-#    float_tetwild_download_project(libigl
-#        GIT_REPOSITORY https://github.com/nTopology/libigl.git
-#        GIT_TAG        a06240498b6121aff03c80817303d098a69d823a
-#    )
-#endfunction()
+# libigl
+function(float_tetwild_download_libigl)
+    float_tetwild_download_project(libigl
+        GIT_REPOSITORY https://github.com/nTopology/libigl.git
+        GIT_TAG        a06240498b6121aff03c80817303d098a69d823a
+    )
+endfunction()
 
 ## Json
 function(float_tetwild_download_json)
