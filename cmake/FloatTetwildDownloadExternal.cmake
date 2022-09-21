@@ -24,14 +24,6 @@ endfunction()
 
 ################################################################################
 
-## libigl
-function(float_tetwild_download_libigl)
-    float_tetwild_download_project(libigl
-        GIT_REPOSITORY https://github.com/libigl/libigl.git
-        GIT_TAG        b0d7740e0b7e887a7e93601c4c557ecf762b389b
-    )
-endfunction()
-
 ## Json
 function(float_tetwild_download_json)
     float_tetwild_download_project(json
