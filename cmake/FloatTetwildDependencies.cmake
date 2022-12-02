@@ -41,10 +41,6 @@ endif()
 
 # Libigl
 if(NOT TARGET igl::core)
-	float_tetwild_download_libigl()
-
-	# Import libigl targets
-	list(APPEND CMAKE_MODULE_PATH "${FLOAT_TETWILD_EXTERNAL}/libigl/cmake")
 	include(libigl)
 endif()
 
