@@ -139,17 +139,22 @@ int tetrahedralization(GEO::Mesh&       sf_mesh,
     if (mesh.params.user_callback) { mesh.params.user_callback(Step::Optimize, 0.0); }
 
     timer.start();
-    optimization(
+    int success = optimization(
       input_vertices, input_faces, input_tags, is_face_inserted, mesh, tree, {{1, 1, 1, 1}});
-    logger().info("mesh optimization {}s", timer.getElapsedTimeInSec());
-    logger().info("");
-    stats().record(StateInfo::optimization_id,
-                   timer.getElapsedTimeInSec(),
-                   mesh.get_v_num(),
-                   mesh.get_t_num(),
-                   mesh.get_max_energy(),
-                   mesh.get_avg_energy());
-
+    if (success == -1) {
+        throw std::exception("Error in mesh optimization.");
+        //return EXIT_FAILURE;
+    }
+    else {
+        logger().info("mesh optimization {}s", timer.getElapsedTimeInSec());
+        logger().info("");
+        stats().record(StateInfo::optimization_id,
+                       timer.getElapsedTimeInSec(),
+                       mesh.get_v_num(),
+                       mesh.get_t_num(),
+                       mesh.get_max_energy(),
+                       mesh.get_avg_energy());
+    }
     if (mesh.params.user_callback) { mesh.params.user_callback(Step::Optimize, 1.0); }
 
     /////////////////////////////////
