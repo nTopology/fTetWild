@@ -117,7 +117,7 @@ int floatTetWild::edge_swapping(Mesh& mesh) {
 
 int floatTetWild::remove_an_edge_32(Mesh& mesh, int v1_id, int v2_id, const std::vector<int>& old_t_ids, std::vector<std::array<int, 2>>& new_edges){
     if(old_t_ids.size()!=3)
-        return 1;
+        return 0;
 
     auto& tet_vertices = mesh.tet_vertices;
     auto& tets = mesh.tets;
