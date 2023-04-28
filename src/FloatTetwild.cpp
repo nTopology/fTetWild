@@ -21,6 +21,7 @@
 #include <floattetwild/MeshIO.hpp>
 #include <floattetwild/Types.hpp>
 #include <fstream>
+#include <exception>
 
 namespace floatTetWild {
 
