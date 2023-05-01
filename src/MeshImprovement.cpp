@@ -126,16 +126,24 @@ void floatTetWild::init(Mesh &mesh, AABBWrapper& tree) {
     }
 }
 
-void floatTetWild::optimization(const std::vector<Vector3> &input_vertices, const std::vector<Vector3i> &input_faces, const std::vector<int> &input_tags, std::vector<bool> &is_face_inserted,
+int floatTetWild::optimization(const std::vector<Vector3> &input_vertices, const std::vector<Vector3i> &input_faces, const std::vector<int> &input_tags, std::vector<bool> &is_face_inserted,
         Mesh &mesh, AABBWrapper& tree, const std::array<int, 4> &ops) {
     init(mesh, tree);
 
+    int success;
+
     ////pre-processing
     mesh.is_limit_length = false;
-    operation(input_vertices, input_faces, input_tags, is_face_inserted, mesh, tree, std::array<int, 5>({{0, 1, 0, 0, 0}}));
+    success = operation(input_vertices, input_faces, input_tags, is_face_inserted, mesh, tree, std::array<int, 5>({{0, 1, 0, 0, 0}}));
+    if (success == -1) {
+        return -1;
+    }
     mesh.is_limit_length = true;
     cleanup_empty_slots(mesh);
-    operation(input_vertices, input_faces, input_tags, is_face_inserted, mesh, tree, std::array<int, 5>({{0, 0, 0, 0, 1}}));
+    success = operation(input_vertices, input_faces, input_tags, is_face_inserted, mesh, tree, std::array<int, 5>({{0, 0, 0, 0, 1}}));
+    if (success == -1) {
+        return -1;
+    }
 
     const int M = mesh.params.refinement_iters_after_insertion; // 5;
     const int N = 5;
@@ -181,7 +189,10 @@ void floatTetWild::optimization(const std::vector<Vector3> &input_vertices, cons
             it_ops = {{ops[0], ops[1], ops[2], ops[3], 1}};
         else
             it_ops = {{ops[0], ops[1], ops[2], ops[3], 0}};
-        operation(input_vertices, input_faces, input_tags, is_face_inserted, mesh, tree, it_ops);
+        success = operation(input_vertices, input_faces, input_tags, is_face_inserted, mesh, tree, it_ops);
+        if (success == -1) {
+            return -1;
+        }
 
         if (it > mesh.params.max_its / 4 && max_energy > 1e3) {//Scalar check
             if (cnt_increase_epsilon > 0 && cnt_increase_epsilon == mesh.params.stage - 1) {
@@ -245,7 +256,12 @@ void floatTetWild::optimization(const std::vector<Vector3> &input_vertices, cons
             continue;
         v.sizing_scalar = 1;
     }
-    operation(input_vertices, input_faces, input_tags, is_face_inserted, mesh, tree, std::array<int, 5>({{0, 1, 0, 0, 0}}));
+    success = operation(input_vertices, input_faces, input_tags, is_face_inserted, mesh, tree, std::array<int, 5>({{0, 1, 0, 0, 0}}));
+    if (success == -1) {
+        return -1;
+    }
+
+    return 1;
 }
 
 void floatTetWild::cleanup_empty_slots(Mesh &mesh, double percentage) {
@@ -300,7 +316,7 @@ void floatTetWild::cleanup_empty_slots(Mesh &mesh, double percentage) {
     }
 }
 
-void floatTetWild::operation(const std::vector<Vector3> &input_vertices, const std::vector<Vector3i> &input_faces, const std::vector<int> &input_tags, std::vector<bool> &is_face_inserted,
+int floatTetWild::operation(const std::vector<Vector3> &input_vertices, const std::vector<Vector3i> &input_faces, const std::vector<int> &input_tags, std::vector<bool> &is_face_inserted,
         Mesh &mesh, AABBWrapper& tree, const std::array<int, 5> &ops) {
     igl::Timer igl_timer;
     int v_num, t_num;
@@ -334,7 +350,10 @@ void floatTetWild::operation(const std::vector<Vector3> &input_vertices, const s
     for (int i = 0; i < ops[2]; i++) {
         igl_timer.start();
         untangle(mesh);
-        edge_swapping(mesh);
+        int success = edge_swapping(mesh);
+        if (success == -1) {
+            return -1;
+        }
         time = igl_timer.getElapsedTime();
         v_num = mesh.get_v_num();
         t_num = mesh.get_t_num();
@@ -473,6 +492,8 @@ void floatTetWild::operation(const std::vector<Vector3> &input_vertices, const s
 //                                                                      false));
 //        }
     }
+
+    return 1;
 }
 
 #include <geogram/points/kd_tree.h>
