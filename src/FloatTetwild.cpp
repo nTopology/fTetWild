@@ -21,7 +21,7 @@
 #include <floattetwild/MeshIO.hpp>
 #include <floattetwild/Types.hpp>
 #include <fstream>
-#include <exception>
+#include <stdexcept>
 
 namespace floatTetWild {
 
@@ -143,7 +143,7 @@ int tetrahedralization(GEO::Mesh&       sf_mesh,
     int success = optimization(
       input_vertices, input_faces, input_tags, is_face_inserted, mesh, tree, {{1, 1, 1, 1}});
     if (success == -1) {
-        throw std::exception("Error in mesh optimization.");
+        throw std::runtime_error("Error in mesh optimization.");
         //return EXIT_FAILURE;
     }
     else {
