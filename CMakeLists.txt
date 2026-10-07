@@ -143,8 +143,6 @@ if(FLOAT_TETWILD_IN_NTOP)
 			json
 		)
 	else()
-	    target_include_directories(${PROJECT_NAME} PUBLIC "${TURBO_CMAKE_DIR}/../external/cgal/unix")
-    
 		target_link_libraries(${PROJECT_NAME}
 			PUBLIC
 			igl::core
